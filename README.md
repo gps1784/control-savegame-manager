@@ -1,5 +1,4 @@
 # *Control* Savegame Manager
----
 
 A little project (originally Ruby, I might massage this into compliable C/C++) that can import, export, and zip savegame files for Remedy's 2019 title "*Control*". I originally created this because I enjoyed *Control* and wanted to be able to play through it again with my wife on PC, but the game only supports a single save slot, despite, apparently, having multiple save files on my version (on Steam). While this tool will not make it "recognize" more than `savegame-slot-00_`, we can at least manipulate the contents of the `savegame-slot-00_` files to coldswap between savefiles.
 
