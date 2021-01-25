@@ -11,14 +11,13 @@ module ControlSavegameManager
       # 3. return the folder
       def self.run()
         Log.log("Control Savegame Manager - Steam Version  #{TRI_LARGE}")
-        'C:\Program Files (x86)\Steam\userdata\120317690\870780\remote'
         path = nil
         Win32::Registry::HKEY_LOCAL_MACHINE.open('SOFTWARE\WOW6432Node\Valve\Steam',
           Win32::Registry::KEY_READ) do |register|
           path = register['InstallPath']
         end # Win32::Registry
         dir_path = File.join(path.gsub('\\','/'),'userdata','*','870780','remote')
-        Log.log(dir_path)
+        Log.log("Searching #{dir_path}  #{TRI_LARGE}")
         files = Dir[ File.join(dir_path,'savegame-slot-*') ]
         sleep(1)
         if( files.count == 0 )
@@ -34,9 +33,8 @@ module ControlSavegameManager
             end # .match()
           end # files.each
           user_slot_hash.each_pair do |steamid, hash|
-            Log.log("Steam/userdata/#{steamid}:\n" + FileFinder.inspect(hash))
+            Log.log("Steam user: 'userdata/#{steamid}'  #{TRI_LARGE}\n" + FileFinder.inspect(hash))
           end
-          #Log.log( user_slot_hash.pretty_inspect() )
         end # if files.count
       end # self.run()
     end # module Steam
