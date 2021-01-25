@@ -1,6 +1,7 @@
 require "optparse"
 
 require "control_savegame_manager/constants"
+require "control_savegame_manager/file_finder"
 require "control_savegame_manager/log"
 require "control_savegame_manager/version"
 
@@ -67,27 +68,49 @@ module ControlSavegameManager
       end # while !valid
     end # self.promptch()
 
+    def self.get_version(opts = {})
+      prompt = "Select your version:"
+      if( COLOR )
+        choices = {
+          "s" => "[" + ColorizedString["S"].bold + "]team version",
+          "e" => "[" + ColorizedString["E"].bold + "]pic version",
+          "m" => "[" + ColorizedString["M"].bold + "]anually locate directory",
+        }
+      else
+        choices = {
+          "s": "[S]team version",
+          "e": "[E]pic version",
+          "m": "[M]anually locate directory",
+        }
+      end
+      version = promptch(prompt, choices)
+      case(version)
+      when "s"
+        opts[:steam]  = true
+      when "e"
+        opts[:epic]   = true
+      when "m"
+        opts[:manual] = true
+      end
+      return opts
+    end # self.get_version()
+
     def self.run()
       opts = optparse()
       Log.log("Control Savegame Manager  #{TRI_LARGE}")
       if( opts[:steam].nil? && opts[:epic].nil? && opts[:manual].nil? )
-        prompt = "Select your version:"
-        if( COLOR )
-          choices = {
-            "s" => "[" + ColorizedString["S"].bold + "]team version",
-            "e" => "[" + ColorizedString["E"].bold + "]pic version",
-            "m" => "[" + ColorizedString["M"].bold + "]anually locate directory",
-          }
-        else
-          choices = {
-            "s": "[S]team version",
-            "e": "[E]pic version",
-            "m": "[M]anually locate directory",
-          }
-        end
-        version = promptch(prompt, choices)
-        Log.log(version.inspect)
+        opts = get_version(opts)
       end # if opts...
+      saves_found = false
+      while( !saves_found )
+        if( opts[:steam] )
+          FileFinder::Steam.run()
+        elsif( opts[:epic] )
+        elsif( opts[:manual] == true )
+        elsif( opts[:manual] )
+        else
+        end
+      end # while !saves_found
     end # self.run()
   end # module CLI
 end # module ControlSavegameManager
